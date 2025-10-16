@@ -1,0 +1,30 @@
+stages:
+  - build
+  - test
+
+variables:
+  PROJECT_NAME: pmayors-project
+
+# Build stage
+  build-job:
+    stage: build
+    image: maven:3.9.9-eclipse-temurin-17
+    only:
+      - main
+    script:
+      - echo "Building the project..."
+      - mvn install
+
+# Test stage
+  test-job:
+    stage: test
+    image: maven:3.9.9-eclipse-temurin-17
+    only:
+      - main
+    script:
+      - echo "Running tests..."
+      - mvn test
+
+
+
+  
