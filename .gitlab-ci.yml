@@ -11,21 +11,36 @@ variables:
 build-job:
   stage: build
   image: maven:3.9.9-eclipse-temurin-17
-  only:
-    - main
+  rules:
+    # Trigger build on main and develop branches 
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
+    # Trigger on merge request
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'  
+    # Trigger when started manually
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    # Trigger on schedule
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    # Otherwise, do not run
+    - when: never
   script:
     - echo "Building the project ${PROJECT_NAME}-build..."
-    - echo "Using JAVA_OPTS:${JAVA_OPTS}"
-    - echo "My secret is ${MY_SECRET}"
-    - echo "The source of the pipeline trigger is $CI_PIPELINE_SOURCE for branch $CI_COMMIT_BRANCH"
     - mvn install
 
 # Test stage
 test-job:
   stage: test
   image: maven:3.9.9-eclipse-temurin-17
-  only:
-    - main
+  rules:
+    # Trigger build on main and develop branches 
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
+    # Trigger on merge request
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'  
+    # Trigger when started manually
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    # Trigger on schedule
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    # Otherwise, do not run
+    - when: never
   script:
     - echo "Running tests on ${PROJECT_NAME}-test..."
     - mvn test
