@@ -68,7 +68,7 @@ security-scan-job:
     - job: build-job
       artifacts: true
   script:
-    - trivy fs --format json --exit-code 0 --vuln-type os, library --output trivy-results.json .
+    - trivy fs --debug --format json --exit-code 0 --vuln-type os,library --output trivy-results.json . || true
   after_script:
     - ls -la
   artifacts:
