@@ -30,6 +30,7 @@ build-job:
 test-job:
   stage: test
   image: maven:3.9.9-eclipse-temurin-17
+  needs: ["build-job"]
   rules:
     # Trigger build on main and develop branches 
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
@@ -44,6 +45,28 @@ test-job:
   script:
     - echo "Running tests on ${PROJECT_NAME}-test..."
     - mvn test
+  after_script:
+    - ls -la
+  artifacts:
+    paths:
+      - target/*.war
+    when: always
+
+security-scan-job:
+  stage: security
+  image: 
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  needs: [build-job]
+  script:
+    - trivy fs --format json --exit-code 0 --vuln-type os, library --output trivy-results.json .
+  after_script:
+    - ls -la
+  artifacts:
+    paths:
+      - trivy-results.json
+    when: always
+
 
 
 
