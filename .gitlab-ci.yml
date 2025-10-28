@@ -26,6 +26,10 @@ build-job:
   script:
     - echo "Building the project ${PROJECT_NAME}-build..."
     - mvn install
+  artifacts:
+    paths:
+      - target/*.war
+    when: always
 
 # Test stage
 test-job:
