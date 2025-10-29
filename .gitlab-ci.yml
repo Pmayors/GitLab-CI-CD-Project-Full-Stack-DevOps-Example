@@ -3,6 +3,7 @@ stages:
   - test
   - security
   - notify
+  - docker
 
 variables:
   PROJECT_NAME: pmayors-project
@@ -77,6 +78,26 @@ security-scan-job:
       - trivy-results.json
     when: always
 
+docker-build-publish:
+  stage: docker 
+  image: docker:latest
+  services:
+    - docker:dind
+  needs: 
+    - job: security-scan-job
+      artifacts: true
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    IMAGE_TAG: $CI_COMMIT_SHA
+  script:
+    - echo "Logging in to GitLab Container Registry..."
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - echo "Building Docker image with custom dockerfile..."
+    - docker build -f Docker-files/app/multistage/Dockerfile -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
+
+
+
 #--------------------------------
 # Notify on Failure Job
 #--------------------------------
@@ -85,3 +106,5 @@ notify-on-failure:
   script:
     - echo "Build test failed, {PROJECT_NAME} Please check logs."
   when: on_failure
+
+
