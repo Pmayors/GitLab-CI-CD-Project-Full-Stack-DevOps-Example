@@ -2,6 +2,7 @@ stages:
   - build
   - test
   - security
+  - notify
 
 variables:
   PROJECT_NAME: pmayors-project
@@ -76,7 +77,11 @@ security-scan-job:
       - trivy-results.json
     when: always
 
-
-
-
-  
+#--------------------------------
+# Notify on Failure Job
+#--------------------------------
+notify-on-failure:
+  stage: notify
+  script:
+    - echo "Build test failed, {PROJECT_NAME} Please check logs."
+  when: on_failure
