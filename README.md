@@ -1,25 +1,2 @@
-# Prerequisites
-#######
-- JDK 17
-- Maven 3 
-- MySQL 8
-
-# Technologies 
-- Spring MVC
-- Spring Security
-- Spring Data JPA
-- Maven
-- JSP
-- Tomcat
-- MySQL
-- Memcached
-- Rabbitmq
-- ElasticSearch
-# Database
-Here,we used Mysql DB 
-sql dump file:
-- /src/main/resources/db_backup.sql
-- db_backup.sql file is a mysql dump file.we have to import this dump to mysql db server
-- > mysql -u <user_name> -p accounts < db_backup.sql
-
+GitLab CI/CD Project: Full-Stack DevOps ExampleThis project demonstrates a comprehensive DevOps workflow centered around GitLab CI/CD for a multi-component application. It integrates build automation, containerization, security scanning, and configuration management.🌟 Project OverviewThis repository contains the application source code, configuration files, and automation scripts necessary to build, test, secure, and deploy the application using a robust CI/CD pipeline.Key ComponentsComponentFiles/DirectoriesDescriptionCI/CD Pipeline.gitlab-ci.ymlDefines the core GitLab 5-stage pipeline (build, test, security, notify, docker) for automated delivery.Source Codesrc/ & pom.xmlJava source code and the Maven Project Object Model for building the application.ContainerizationDocker-files/Contains the Multi-stage Dockerfile for building the optimized application image.Local Environmentdocker-compose.ymlDefines the multi-container development environment.Configurationansible/Contains Ansible playbooks for infrastructure and application setup.🚀 GitLab CI/CD Pipeline StagesThe .gitlab-ci.yml defines the following workflow executed by GitLab Runners:build: Compiles the Java code using Maven and creates a .war artifact.test: Runs unit and integration tests using Maven.security: Executes a vulnerability scan using Trivy (aquasec/trivy:latest) on the file system and generates a JSON report.docker: Logs into the GitLab Container Registry, performs a multi-stage Docker build, and pushes the tagged image.notify: A simple notification job that runs on_failure to alert the team if a critical stage fails.
 
